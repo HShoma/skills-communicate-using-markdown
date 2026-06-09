@@ -54,25 +54,38 @@ jobs:
         with:
           file: day-1.md
 
-      - name: Check for level 1 header
-        id: check-h1
+      - name: Check for expected title heading
+        id: check-title-heading
         continue-on-error: true
         uses: skills/action-keyphrase-checker@v1
         with:
           text-file: day-1.md
-          keyphrase: "# "
-          case-sensitive: false
+          keyphrase: "# Daily Learning"
+          case-sensitive: true
           minimum-occurrences: 1
+          maximum-occurrences: 1
 
-      - name: Check for level 2 headers
-        id: check-h2
+      - name: Check for expected morning heading
+        id: check-morning-heading
         continue-on-error: true
         uses: skills/action-keyphrase-checker@v1
         with:
           text-file: day-1.md
-          keyphrase: "## "
-          case-sensitive: false
-          minimum-occurrences: 2
+          keyphrase: "## Morning Planning"
+          case-sensitive: true
+          minimum-occurrences: 1
+          maximum-occurrences: 1
+
+      - name: Check for expected review heading
+        id: check-review-heading
+        continue-on-error: true
+        uses: skills/action-keyphrase-checker@v1
+        with:
+          text-file: day-1.md
+          keyphrase: "## Review"
+          case-sensitive: true
+          minimum-occurrences: 1
+          maximum-occurrences: 1
 
       - name: Build message - step results
         id: build-message-step-results
@@ -85,10 +98,12 @@ jobs:
             results_table:
               - description: "day-1.md file exists"
                 passed: ${{ steps.check-file-exists.outcome == 'success' }}
-              - description: "One level 1 heading (#) added to day-1.md"
-                passed: ${{ steps.check-h1.outcome == 'success' }}
-              - description: "Two level 2 heading (##) added to day-1.md"
-                passed: ${{ steps.check-h2.outcome == 'success' }}
+              - description: "\"# Daily Learning\" added to day-1.md"
+                passed: ${{ steps.check-title-heading.outcome == 'success' }}
+              - description: "\"## Morning Planning\" added to day-1.md"
+                passed: ${{ steps.check-morning-heading.outcome == 'success' }}
+              - description: "\"## Review\" added to day-1.md"
+                passed: ${{ steps.check-review-heading.outcome == 'success' }}
 
       - name: Create comment - step results
         run: |
